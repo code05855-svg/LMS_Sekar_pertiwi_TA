@@ -1,0 +1,12 @@
+{
+  "name": "n8n-tiruan-lms-sekolah",
+  "private": true,
+  "type": "module",
+  "description": "Simulator n8n untuk menguji LMS tanpa n8n/Gemini sungguhan (menjalankan kode node Code dari berkas workflow).",
+  "scripts": {
+    "start": "node n8n-tiruan.mjs"
+  },
+  "dependencies": {
+    "pdfjs-dist": "4.10.38"
+  }
+}

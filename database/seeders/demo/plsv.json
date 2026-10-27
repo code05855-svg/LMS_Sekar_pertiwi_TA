@@ -1,0 +1,17 @@
+{
+ "judul": "Persamaan Linear Satu Variabel",
+ "halaman": [
+  {
+   "halaman": 1,
+   "teks": "Konsep Persamaan Linear Satu Variabel\n\nPersamaan linear satu variabel (PLSV) adalah kalimat terbuka yang dihubungkan tanda sama dengan dan hanya memiliki satu variabel berpangkat satu. Contohnya x + 5 = 12 dan 2x + 3 = 11.\n\nVariabel adalah lambang pengganti bilangan yang belum diketahui, biasanya ditulis dengan huruf kecil seperti x atau y. Konstanta adalah suku yang nilainya tetap, misalnya 5 dan 12 pada x + 5 = 12. Koefisien adalah angka yang mengalikan variabel, misalnya 2 pada 2x.\n\nPenyelesaian persamaan adalah nilai variabel yang membuat persamaan bernilai benar. Pada x + 5 = 12, penyelesaiannya adalah x = 7 karena 7 + 5 = 12."
+  },
+  {
+   "halaman": 2,
+   "teks": "Menyelesaikan PLSV dengan Operasi yang Setara\n\nPersamaan dapat diselesaikan dengan melakukan operasi yang sama pada kedua ruas: menambah, mengurangi, mengalikan, atau membagi kedua ruas dengan bilangan yang sama. Persamaan yang dihasilkan disebut persamaan yang setara dan memiliki penyelesaian yang sama.\n\nContoh 1: Selesaikan 2x + 3 = 11. Kurangi kedua ruas dengan 3 sehingga 2x = 8. Bagi kedua ruas dengan 2 sehingga x = 4. Jadi penyelesaiannya x = 4.\n\nContoh 2: Selesaikan 3x - 7 = 14. Tambahkan 7 pada kedua ruas sehingga 3x = 21. Bagi kedua ruas dengan 3 sehingga x = 7.\n\nUntuk memeriksa jawaban, substitusikan nilai x ke persamaan awal. Pada contoh 1, 2 kali 4 ditambah 3 sama dengan 11, sehingga jawabannya benar."
+  },
+  {
+   "halaman": 3,
+   "teks": "Soal Cerita dan Latihan\n\nLangkah menyelesaikan soal cerita: pertama, tentukan hal yang ditanyakan dan misalkan dengan variabel. Kedua, ubah cerita menjadi persamaan. Ketiga, selesaikan persamaan. Keempat, tulis jawaban sesuai pertanyaan.\n\nContoh soal cerita: Umur Rani 5 tahun lebih tua dari umur Dina. Jumlah umur mereka 29 tahun. Misalkan umur Dina adalah x, maka umur Rani x + 5. Persamaannya x + (x + 5) = 29 sehingga 2x = 24 dan x = 12. Jadi umur Dina 12 tahun dan umur Rani 17 tahun.\n\nLatihan: (1) x + 9 = 15. (2) 4x - 6 = 18. (3) 5x + 2 = 3x + 10. (4) Jumlah dua bilangan genap berurutan adalah 54; tentukan kedua bilangan itu."
+  }
+ ]
+}

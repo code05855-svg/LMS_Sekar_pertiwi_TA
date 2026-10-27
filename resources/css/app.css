@@ -1,0 +1,155 @@
+@import '@fontsource-variable/inter';
+@import 'tailwindcss';
+
+@source '../views';
+
+/*
+ * Design system SMP Sekar Pertiwi (UI/UX 09 Design System)
+ * navy #172554 | gold #F7C948 | merah lambang #C7303D | sukses #1E9169
+ * latar #F7F8FB | permukaan #FFFFFF | irama spasi 8px, kartu membulat.
+ */
+@theme {
+    --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+    --color-navy: #172554;
+    --color-navy-700: #1f3170;
+    --color-navy-800: #1b2a63;
+    --color-navy-900: #111b3f;
+    --color-info-soft: #eaf0ff;
+
+    --color-gold: #f7c948;
+    --color-gold-600: #e8b62c;
+    --color-gold-soft: #fef6d8;
+
+    --color-danger: #c7303d;
+    --color-danger-700: #a8242f;
+    --color-danger-soft: #fdecee;
+
+    --color-success: #1e9169;
+    --color-success-soft: #e4f5ee;
+
+    --color-canvas: #f7f8fb;
+    --color-surface: #ffffff;
+    --color-line: #e6e9f0;
+    --color-ink: #1b2236;
+    --color-muted: #667085;
+
+    --radius-card: 1rem;
+    --shadow-card: 0 1px 2px rgb(23 37 84 / 0.04), 0 1px 1px rgb(23 37 84 / 0.03);
+    --shadow-pop: 0 12px 32px -8px rgb(23 37 84 / 0.25);
+}
+
+@layer base {
+    html {
+        font-size: 15px;
+        -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+        @apply bg-canvas font-sans text-ink antialiased;
+    }
+
+    [x-cloak] {
+        display: none !important;
+    }
+
+    :focus-visible {
+        @apply outline-2 outline-offset-2 outline-navy;
+    }
+
+    ::selection {
+        background: var(--color-gold);
+        color: var(--color-navy);
+    }
+}
+
+    /* ---------- Tombol ---------- */
+@utility btn {
+        @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition
+            focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy
+            disabled:cursor-not-allowed disabled:opacity-60;
+    }
+@utility btn-primary { @apply btn bg-navy text-white shadow-sm hover:bg-navy-700; }
+@utility btn-secondary { @apply btn border border-line bg-white text-navy hover:bg-canvas; }
+@utility btn-gold { @apply btn bg-gold text-navy hover:bg-gold-600; }
+@utility btn-danger { @apply btn bg-danger text-white hover:bg-danger-700; }
+@utility btn-danger-soft { @apply btn bg-danger-soft text-danger hover:bg-danger/15; }
+@utility btn-ghost { @apply btn text-navy hover:bg-info-soft; }
+@utility btn-sm { @apply px-3 py-1.5 text-[13px] rounded-lg; }
+@utility btn-icon { @apply inline-flex size-9 items-center justify-center rounded-lg text-muted transition hover:bg-info-soft hover:text-navy; }
+
+    /* ---------- Form ---------- */
+@utility label { @apply mb-1.5 block text-sm font-semibold text-ink; }
+@utility input {
+        @apply block w-full rounded-xl border border-line bg-canvas px-3.5 py-2.5 text-sm text-ink placeholder:text-muted/80
+            transition focus:border-navy focus:bg-white focus:outline-none focus:ring-2 focus:ring-navy/15
+            disabled:cursor-not-allowed disabled:opacity-60;
+    }
+@utility input-error { @apply border-danger bg-danger-soft/40 focus:border-danger focus:ring-danger/20; }
+@utility hint { @apply mt-1.5 text-xs text-muted; }
+@utility error-text { @apply mt-1.5 text-xs font-medium text-danger; }
+
+    /* ---------- Kartu ---------- */
+@utility card { @apply rounded-(--radius-card) border border-line bg-surface shadow-(--shadow-card); }
+@utility card-pad { @apply card p-5 sm:p-6; }
+@utility card-title { @apply text-[15px] font-semibold text-ink; }
+
+    /* ---------- Lencana ---------- */
+@utility badge { @apply inline-flex items-center gap-1 whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-semibold; }
+@utility badge-info { @apply badge bg-info-soft text-navy; }
+@utility badge-danger { @apply badge bg-danger-soft text-danger; }
+@utility badge-success { @apply badge bg-success-soft text-success; }
+@utility badge-gold { @apply badge bg-gold-soft text-[#8a6500]; }
+@utility badge-muted { @apply badge bg-canvas text-muted ring-1 ring-inset ring-line; }
+
+    /* ---------- Tabel ---------- */
+@utility tabel {
+        @apply w-full text-left text-sm;
+
+        & thead th {
+            @apply whitespace-nowrap px-4 py-3 text-xs font-semibold uppercase tracking-wide text-muted;
+        }
+
+        & tbody td {
+            @apply border-t border-line px-4 py-3.5 align-middle;
+        }
+
+        & tbody tr {
+            @apply transition-colors hover:bg-canvas/70;
+        }
+    }
+
+    /* ---------- Tautan teks ---------- */
+@utility tautan { @apply font-semibold text-navy underline-offset-4 hover:underline; }
+
+    /* ---------- Chatbot ---------- */
+@utility gelembung-bot { @apply w-fit max-w-[88%] rounded-2xl rounded-tl-md bg-info-soft px-4 py-3 text-sm leading-relaxed text-ink; }
+@utility gelembung-saya { @apply ml-auto w-fit max-w-[88%] rounded-2xl rounded-tr-md bg-canvas px-4 py-3 text-sm leading-relaxed text-ink ring-1 ring-inset ring-line; }
+
+@layer base {
+    textarea.input { @apply min-h-28 resize-y leading-relaxed; }
+    select.input { @apply pr-9; }
+}
+
+/* Titik animasi "sedang mengetik" */
+@keyframes lompat {
+    0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
+    40% { transform: translateY(-4px); opacity: 1; }
+}
+.titik-mengetik span {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    background: var(--color-navy);
+    animation: lompat 1.2s infinite ease-in-out;
+}
+.titik-mengetik span:nth-child(2) { animation-delay: 0.15s; }
+.titik-mengetik span:nth-child(3) { animation-delay: 0.3s; }
+
+/* Scrollbar tipis untuk panel */
+.scroll-tipis { scrollbar-width: thin; scrollbar-color: #cfd6e6 transparent; }
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
