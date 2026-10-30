@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # LMS SMP Sekar Pertiwi
 
 Learning Management System untuk SMP Sekar Pertiwi dengan chatbot akademik
@@ -146,3 +147,6 @@ Kata sandi disimpan ter-hash (bcrypt). Rute n8n dilindungi token Bearer; webhook
 ## 8. Catatan pengembangan
 
 Proyek ini dibangun dan diuji pada PHP 8.3, Laravel 13.38 dan **MariaDB 10.11 sebagai pengganti MySQL 8**. Yang **belum** diuji di lingkungan pengembangan: MySQL 8 sungguhan, Windows/Laragon, serta n8n dan Gemini yang sesungguhnya (workflow dan kode node diuji lewat simulator, nama model Gemini mengikuti dokumen rancangan dan bisa diubah di node *Konfigurasi*). Bila ada perbedaan perilaku saat pertama kali dijalankan di Laragon, mulai dari bagian *Pemecahan masalah*.
+=======
+# lms_smp_sekar_pertiwi_ta
+>>>>>>> d4f3c8e9e4bae85530273dc819b9a2280b68fb63
