@@ -6,7 +6,9 @@ use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ForumBalasanController;
 use App\Http\Controllers\ForumTopikController;
+use App\Http\Controllers\FotoProfilController;
 use App\Http\Controllers\Guru;
+use App\Http\Controllers\LampiranTugasController;
 use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\Siswa;
 use Illuminate\Support\Facades\Route;
@@ -39,6 +41,10 @@ Route::middleware('auth')->group(function () {
 
     Route::get('profil', [ProfilController::class, 'edit'])->name('profil.edit');
     Route::put('profil', [ProfilController::class, 'update'])->name('profil.update');
+    Route::post('profil/foto', [FotoProfilController::class, 'store'])->name('profil.foto.store');
+    Route::delete('profil/foto', [FotoProfilController::class, 'destroy'])->name('profil.foto.destroy');
+    Route::get('foto-profil/{user}', [FotoProfilController::class, 'show'])->name('foto-profil.show');
+    Route::middleware('peran:guru,siswa')->get('lampiran-tugas/{lampiran}', [LampiranTugasController::class, 'show'])->name('lampiran-tugas.show');
 
     // Chatbot akademik: siswa dan guru (admin tidak punya materi untuk ditanyakan)
     Route::middleware('peran:siswa,guru')->prefix('chatbot')->name('chatbot.')->group(function () {

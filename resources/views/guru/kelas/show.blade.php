@@ -58,7 +58,7 @@
             <x-slot:aksi><a href="{{ route('forum.topik.index', $penugasan) }}" class="tautan text-sm">Buka →</a></x-slot:aksi>
             @forelse ($topikTerbaru as $t)
                 <a href="{{ route('forum.topik.show', $t) }}" class="flex items-start gap-3 border-t border-line px-5 py-3 first:border-t-0 transition hover:bg-canvas">
-                    <x-avatar :nama="$t->pembuat->nama" ukuran="size-9 text-xs" />
+                    <x-avatar :user="$t->pembuat" ukuran="size-9 text-xs" />
                     <span class="min-w-0">
                         <span class="flex items-center gap-1.5 text-sm font-semibold text-ink">
                             @if ($t->disematkan)<x-ikon nama="sematan" class="size-3.5 shrink-0 text-gold-600" />@endif
@@ -79,7 +79,7 @@
                 <ul class="scroll-tipis max-h-72 divide-y divide-line overflow-y-auto px-5 pb-3">
                     @foreach ($daftarSiswa as $s)
                         <li class="flex items-center gap-3 py-2.5">
-                            <x-avatar :nama="$s->nama" ukuran="size-8 text-[11px]" />
+                            <x-avatar :user="$s" ukuran="size-8 text-[11px]" />
                             <span class="min-w-0 flex-1">
                                 <span class="block truncate text-sm font-medium text-ink">{{ $s->nama }}</span>
                                 <span class="block text-xs text-muted">{{ $s->nomor_induk }}</span>

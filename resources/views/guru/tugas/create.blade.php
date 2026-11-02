@@ -8,7 +8,7 @@
 @if ($daftarPenugasan->isEmpty())
     <x-alert tipe="peringatan" judul="Belum ada kelas yang diampu">Admin sekolah perlu menambahkan penugasan mengajar untuk akunmu sebelum kamu bisa membuat tugas.</x-alert>
 @else
-    <form method="POST" action="{{ route('guru.tugas.store') }}" class="card max-w-3xl p-5 sm:p-7">
+        <form method="POST" action="{{ route('guru.tugas.store') }}" enctype="multipart/form-data" class="card max-w-3xl p-5 sm:p-7">
         @csrf
         @include('guru.tugas._form')
 

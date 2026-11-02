@@ -69,7 +69,7 @@
         <x-card judul="Akun terbaru">
             @forelse ($akunTerbaru as $akun)
                 <div class="flex items-center gap-3 py-2 {{ $loop->first ? '' : 'border-t border-line' }}">
-                    <x-avatar :nama="$akun->nama" ukuran="size-9 text-xs" />
+                    <x-avatar :user="$akun" ukuran="size-9 text-xs" />
                     <div class="min-w-0 flex-1">
                         <p class="truncate text-sm font-semibold text-ink">{{ $akun->nama }}</p>
                         <p class="text-xs text-muted">{{ $akun->nomor_induk }} · {{ $akun->created_at?->diffForHumans() }}</p>

@@ -120,7 +120,7 @@
     <x-card judul="Forum terbaru" :tanpa-padding="true">
         @forelse ($topikTerbaru as $t)
             <a href="{{ route('forum.topik.show', $t) }}" class="flex items-start gap-3 border-t border-line px-5 py-3 first:border-t-0 transition hover:bg-canvas">
-                <x-avatar :nama="$t->pembuat->nama" ukuran="size-9 text-xs" />
+                <x-avatar :user="$t->pembuat" ukuran="size-9 text-xs" />
                 <span class="min-w-0">
                     <span class="block truncate text-sm font-semibold text-ink">{{ $t->judul }}</span>
                     <span class="block text-xs text-muted">{{ $t->pembuat->nama }} · {{ $t->penugasanGuru->mataPelajaran->nama }} {{ $t->penugasanGuru->kelas->nama }} · {{ $t->balasan_count }} balasan</span>

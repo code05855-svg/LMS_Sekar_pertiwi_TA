@@ -6,8 +6,10 @@ use App\Http\Requests\KirimPertanyaanRequest;
 use App\Models\Faq;
 use App\Models\RiwayatChat;
 use App\Services\ChatbotService;
+use App\Services\PembersihRiwayatChat;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 
@@ -18,6 +20,7 @@ class ChatbotController extends Controller
 
     public function index(Request $request): View
     {
+        $this->jadwalkanPembersihan();
         $sesiId = $request->session()->get(self::KUNCI_SESI);
 
         $percakapan = $sesiId
@@ -70,5 +73,20 @@ class ChatbotController extends Controller
             ->paginate(15);
 
         return view('chatbot.riwayat', ['daftar' => $daftar]);
+    }
+
+    private function jadwalkanPembersihan(): void
+    {
+        if (! config('lms.chatbot.bersih_otomatis') || ! Cache::add('chat-bersih-terakhir', now()->toDateTimeString(), now()->addDay())) {
+            return;
+        }
+
+        app()->terminating(function () {
+            try {
+                app(PembersihRiwayatChat::class)->bersihkan();
+            } catch (\Throwable $e) {
+                report($e);
+            }
+        });
     }
 }

@@ -40,7 +40,7 @@
                 @if ($topik->dikunci)<span class="badge-muted"><x-ikon nama="kunci" class="size-3" /> Dikunci</span>@endif
             </div>
             <div class="mt-3 flex items-center gap-3">
-                <x-avatar :nama="$topik->pembuat->nama" ukuran="size-11 text-sm" />
+                <x-avatar :user="$topik->pembuat" ukuran="size-11 text-sm" />
                 <div>
                     <p class="font-semibold text-ink">{{ $topik->pembuat->nama }}@if ($topik->pembuat->adalahGuru()) <span class="badge-gold ml-1">Guru</span>@endif</p>
                     <p class="text-xs text-muted">{{ $topik->created_at->translatedFormat('d M Y, H:i') }}</p>

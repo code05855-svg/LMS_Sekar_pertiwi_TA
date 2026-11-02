@@ -32,7 +32,7 @@
             @else
                 <p class="mt-2 text-sm text-muted">Gurumu tidak menambahkan instruksi tertulis. Tanyakan di forum bila ada yang kurang jelas.</p>
             @endif
-
+            <x-daftar-lampiran :tugas="$tugas" class="mt-6" />
             <p class="mt-5 text-xs text-muted">Nilai maksimum {{ $tugas->nilai_maksimum }} · diberikan {{ $tugas->created_at->translatedFormat('d M Y') }}</p>
         </x-card>
 

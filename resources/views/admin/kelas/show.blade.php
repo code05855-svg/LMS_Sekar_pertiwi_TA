@@ -45,7 +45,7 @@
             <ul class="scroll-tipis max-h-[28rem] divide-y divide-line overflow-y-auto px-5 pb-3">
                 @foreach ($kelas->siswa as $s)
                     <li class="flex items-center gap-3 py-2.5">
-                        <x-avatar :nama="$s->nama" ukuran="size-9 text-xs" />
+                        <x-avatar :user="$s" ukuran="size-9 text-xs" />
                         <div class="min-w-0 flex-1">
                             <p class="truncate text-sm font-semibold text-ink">{{ $s->nama }}</p>
                             <p class="text-xs text-muted">{{ $s->nomor_induk }}</p>

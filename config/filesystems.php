@@ -53,6 +53,18 @@ return [
             'throw' => false,
             'report' => false,
         ],
+        'lampiran_tugas' => [
+            'driver' => 'local',
+            'root' => storage_path('app/private/lampiran-tugas'),
+            'throw' => false,
+            'report' => false,
+            ],
+        'foto_profil' => [
+            'driver' => 'local',
+            'root' => storage_path('app/private/foto-profil'),
+            'throw' => false,
+            'report' => false,
+        ],
 
         'public' => [
             'driver' => 'local',

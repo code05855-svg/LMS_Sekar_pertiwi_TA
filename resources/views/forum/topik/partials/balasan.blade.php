@@ -8,7 +8,7 @@
 
 <article id="balasan-{{ $balasan->id }}" x-data="{ ubah: false }" class="scroll-mt-24 px-5 py-5 sm:px-6">
     <div class="flex gap-4">
-        <x-avatar :nama="$balasan->pembuat->nama" ukuran="size-10 text-sm" />
+        <x-avatar :user="$balasan->pembuat" ukuran="size-10 text-sm" />
         <div class="min-w-0 flex-1">
             <div class="flex flex-wrap items-center gap-x-2 gap-y-1">
                 <span class="font-semibold text-ink">{{ $balasan->pembuat->nama }}</span>

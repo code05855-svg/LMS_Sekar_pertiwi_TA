@@ -50,7 +50,7 @@
                 <tr>
                     <td>
                         <div class="flex items-center gap-3">
-                            <x-avatar :nama="$akun->nama" ukuran="size-9 text-xs" />
+                            <x-avatar :user="$akun" ukuran="size-9 text-xs" />
                             <div class="min-w-0">
                                 <p class="font-semibold text-ink">{{ $akun->nama }}</p>
                                 @if ($akun->email)<p class="text-xs text-muted">{{ $akun->email }}</p>@endif

@@ -1,13 +1,15 @@
 <?php
-
+ 
 namespace App\Models;
-
+ 
+use App\Enums\JenisJawaban;
 use App\Enums\StatusPengumpulan;
+use App\Support\BerkasAman;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use InvalidArgumentException;
-
+ 
 /**
  * Berkas jawaban tugas milik siswa | DFD D3.2.
  * Tidak pernah diindeks chatbot.
@@ -19,10 +21,13 @@ use InvalidArgumentException;
  * @property int $id
  * @property int $tugas_id
  * @property int $siswa_id
- * @property string $nama_asli
- * @property string $path
- * @property string $mime
- * @property int $ukuran
+ * @property JenisJawaban $jenis       dokumen, foto, tautan, atau teks
+ * @property string|null $nama_asli    Hanya untuk dokumen/foto
+ * @property string|null $path         Hanya untuk dokumen/foto
+ * @property string|null $mime         Hanya untuk dokumen/foto
+ * @property int|null $ukuran          Hanya untuk dokumen/foto
+ * @property string|null $tautan       Hanya untuk jenis tautan
+ * @property string|null $teks         Hanya untuk jenis teks
  * @property \Illuminate\Support\Carbon $waktu_kumpul
  * @property StatusPengumpulan $status
  * @property string|null $nilai          Desimal 2 angka, mis. "85.00"
@@ -34,21 +39,25 @@ use InvalidArgumentException;
 class PengumpulanTugas extends Model
 {
     protected $table = 'pengumpulan_tugas';
-
+ 
     protected $fillable = [
         'tugas_id',
         'siswa_id',
+        'jenis',
         'nama_asli',
         'path',
         'mime',
         'ukuran',
+        'tautan',
+        'teks',
         'waktu_kumpul',
         'status',
     ];
-
+ 
     protected function casts(): array
     {
         return [
+            'jenis' => JenisJawaban::class,
             'ukuran' => 'integer',
             'waktu_kumpul' => 'datetime',
             'status' => StatusPengumpulan::class,
@@ -56,50 +65,87 @@ class PengumpulanTugas extends Model
             'dinilai_pada' => 'datetime',
         ];
     }
-
+ 
     // ------------------------------------------------------------------
     // Relasi
     // ------------------------------------------------------------------
-
+ 
     public function tugas(): BelongsTo
     {
         return $this->belongsTo(Tugas::class, 'tugas_id');
     }
-
+ 
     public function siswa(): BelongsTo
     {
         return $this->belongsTo(User::class, 'siswa_id');
     }
-
+ 
     // ------------------------------------------------------------------
     // Scope
     // ------------------------------------------------------------------
-
+ 
     public function scopeSudahDinilai(Builder $query): void
     {
         $query->whereNotNull('nilai');
     }
-
+ 
     public function scopeBelumDinilai(Builder $query): void
     {
         $query->whereNull('nilai');
     }
-
+ 
     public function scopeMilikSiswa(Builder $query, User $siswa): void
     {
         $query->where('siswa_id', $siswa->id);
     }
-
+ 
+    // ------------------------------------------------------------------
+    // Isi jawaban (dokumen, foto, tautan, atau teks)
+    // ------------------------------------------------------------------
+ 
+    public function berupaBerkas(): bool
+    {
+        return $this->jenis->berkas();
+    }
+ 
+    /** PDF dan gambar bisa dibuka langsung di peramban. */
+    public function bisaDilihatLangsung(): bool
+    {
+        return $this->berupaBerkas() && BerkasAman::bisaLangsung($this->mime);
+    }
+ 
+    public function hostTautan(): ?string
+    {
+        $host = $this->tautan ? parse_url($this->tautan, PHP_URL_HOST) : null;
+ 
+        return $host ? preg_replace('/^www\./i', '', $host) : null;
+    }
+ 
+    public function jumlahKata(): int
+    {
+        return $this->teks ? (int) preg_match_all('/[\p{L}\p{N}]+/u', $this->teks) : 0;
+    }
+ 
+    /** Ringkasan satu baris untuk daftar: nama berkas, alamat situs, atau panjang teks. */
+    public function ringkasan(): string
+    {
+        return match ($this->jenis) {
+            JenisJawaban::Dokumen, JenisJawaban::Foto => (string) $this->nama_asli,
+            JenisJawaban::Tautan => $this->hostTautan() ?? (string) $this->tautan,
+            JenisJawaban::Teks => 'Jawaban teks · '.$this->jumlahKata().' kata',
+        };
+    }
+ 
     // ------------------------------------------------------------------
     // Penilaian (proses 3.6)
     // ------------------------------------------------------------------
-
+ 
     /** Dinamai telahDinilai() karena sudahDinilai() sudah dipakai sebagai scope. */
     public function telahDinilai(): bool
     {
         return $this->nilai !== null;
     }
-
+ 
     /**
      * Simpan nilai dan komentar guru. Nilai harus 0 sampai nilai_maksimum
      * tugas (UpdateNilaiRequest memeriksa hal yang sama untuk pesan galat
@@ -108,11 +154,11 @@ class PengumpulanTugas extends Model
     public function beriNilai(int|float|string $nilai, ?string $komentar = null): bool
     {
         $maksimum = $this->tugas->nilai_maksimum;
-
+ 
         if (! is_numeric($nilai) || $nilai < 0 || $nilai > $maksimum) {
             throw new InvalidArgumentException("Nilai harus berupa angka 0 sampai {$maksimum}.");
         }
-
+ 
         return $this->forceFill([
             'nilai' => $nilai,
             'komentar' => $komentar,

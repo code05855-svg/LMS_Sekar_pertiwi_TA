@@ -40,7 +40,7 @@
                     <tr x-show="filter === 'semua' || filter === '{{ $kategori }}'">
                         <td>
                             <div class="flex items-center gap-3">
-                                <x-avatar :nama="$s->nama" ukuran="size-9 text-xs" />
+                                <x-avatar :user="$s" ukuran="size-9 text-xs" />
                                 <div class="min-w-0">
                                     <p class="truncate font-semibold text-ink">{{ $s->nama }}</p>
                                     <p class="text-xs text-muted">{{ $s->nomor_induk }}</p>
@@ -49,8 +49,17 @@
                         </td>
                         @if ($p)
                             <td class="max-w-48">
-                                <a href="{{ route('guru.pengumpulan-tugas.unduh', [$p, 'lihat' => 1]) }}" target="_blank" rel="noopener" class="tautan inline-flex max-w-full items-center gap-1.5 text-sm"><x-ikon nama="klip" class="size-4 shrink-0" /><span class="truncate">{{ $p->nama_asli }}</span></a>
-                                <span class="block text-xs text-muted">{{ \App\Support\Format::ukuran($p->ukuran) }}</span>
+                                <!-- <a href="{{ route('guru.pengumpulan-tugas.unduh', [$p, 'lihat' => 1]) }}" target="_blank" rel="noopener" class="tautan inline-flex max-w-full items-center gap-1.5 text-sm"><x-ikon nama="klip" class="size-4 shrink-0" /><span class="truncate">{{ $p->nama_asli }}</span></a>
+                                <span class="block text-xs text-muted">{{ \App\Support\Format::ukuran($p->ukuran) }}</span> -->
+
+                                @if ($p->berupaBerkas())
+                                    <a href="{{ route('guru.pengumpulan-tugas.unduh', [$p, 'lihat' => 1]) }}" target="_blank" rel="noopener" class="tautan inline-flex max-w-full items-center gap-1.5 text-sm"><x-ikon :nama="$p->jenis->ikon()" class="size-4 shrink-0" /><span class="truncate">{{ $p->ringkasan() }}</span></a>
+                                    <span class="block text-xs text-muted">{{ \App\Support\Format::ukuran($p->ukuran) }}</span>
+                                @else
+                                    <a href="{{ route('guru.pengumpulan-tugas.show', $p) }}" class="tautan inline-flex max-w-full items-center gap-1.5 text-sm"><x-ikon :nama="$p->jenis->ikon()" class="size-4 shrink-0" /><span class="truncate">{{ $p->ringkasan() }}</span></a>
+                                    <span class="block text-xs text-muted">{{ $p->jenis->label() }}</span>
+                                @endif
+
                             </td>
                             <td class="whitespace-nowrap">
                                 <span class="text-ink">{{ $p->waktu_kumpul->translatedFormat('d M, H:i') }}</span>

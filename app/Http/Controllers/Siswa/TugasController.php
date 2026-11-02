@@ -13,7 +13,7 @@ class TugasController extends Controller
     {
         $this->authorize('view', $tugas);
 
-        $tugas->load(['penugasanGuru.guru', 'penugasanGuru.kelas', 'penugasanGuru.mataPelajaran']);
+        $tugas->load(['penugasanGuru.guru', 'penugasanGuru.kelas', 'penugasanGuru.mataPelajaran','lampiran']);
 
         return view('siswa.tugas.show', [
             'tugas' => $tugas,

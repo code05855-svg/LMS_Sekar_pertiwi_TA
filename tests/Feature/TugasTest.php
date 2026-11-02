@@ -42,12 +42,16 @@ class TugasTest extends TestCase
     {
         $this->actingAs($this->s->guru1)->post(route('guru.tugas.store'), [
             'penugasan_guru_id' => $this->s->ipaA->id, 'judul' => 'Laporan', 'instruksi' => 'Amati.', 'tenggat' => '2026-10-30T23:59', 'nilai_maksimum' => 100,
+            'jenis_jawaban' => ['dokumen', 'foto', 'tautan', 'teks'],
         ])->assertRedirect();
 
         $tugas = Tugas::firstOrFail();
         $this->assertSame('2026-10-30 23:59:00', $tugas->tenggat->format('Y-m-d H:i:s'));
 
-        $this->put(route('guru.tugas.update', $tugas), ['judul' => 'Laporan 2', 'instruksi' => '', 'tenggat' => '2026-11-02T08:00', 'nilai_maksimum' => 50])
+        $this->put(route('guru.tugas.update', $tugas), [
+            'judul' => 'Laporan 2', 'instruksi' => '', 'tenggat' => '2026-11-02T08:00', 'nilai_maksimum' => 50,
+            'jenis_jawaban' => ['dokumen', 'foto', 'tautan', 'teks'],
+        ])
             ->assertRedirect(route('guru.tugas.show', $tugas));
         $this->assertSame(50, $tugas->fresh()->nilai_maksimum);
 
@@ -59,7 +63,13 @@ class TugasTest extends TestCase
     public function validasi_tugas(): void
     {
         $this->actingAs($this->s->guru1);
-        $dasar = ['penugasan_guru_id' => $this->s->ipaA->id, 'judul' => 'T', 'tenggat' => '2026-10-30T23:59', 'nilai_maksimum' => 100];
+        $dasar = [
+            'penugasan_guru_id' => $this->s->ipaA->id,
+            'judul' => 'T',
+            'tenggat' => '2026-10-30T23:59',
+            'nilai_maksimum' => 100,
+            'jenis_jawaban' => ['dokumen', 'foto', 'tautan', 'teks'],
+        ];
 
         $this->post(route('guru.tugas.store'), ['judul' => ''] + $dasar)->assertSessionHasErrors('judul');
         $this->post(route('guru.tugas.store'), ['tenggat' => 'kemarin sore'] + $dasar)->assertSessionHasErrors('tenggat');
@@ -87,11 +97,17 @@ class TugasTest extends TestCase
         $tugas = $this->tugas($this->s->ipaA);
 
         $this->actingAs($this->s->guru2);
-        $this->put(route('guru.tugas.update', $tugas), ['judul' => 'X', 'tenggat' => '2026-10-30T10:00', 'nilai_maksimum' => 100])->assertForbidden();
+        $this->put(route('guru.tugas.update', $tugas), [
+            'judul' => 'X', 'tenggat' => '2026-10-30T10:00', 'nilai_maksimum' => 100,
+            'jenis_jawaban' => ['dokumen', 'foto', 'tautan', 'teks'],
+        ])->assertForbidden();
         $this->delete(route('guru.tugas.destroy', $tugas))->assertForbidden();
 
         $this->actingAs($this->s->siswaA1);
-        $this->post(route('guru.tugas.store'), ['penugasan_guru_id' => $this->s->ipaA->id, 'judul' => 'X', 'tenggat' => '2026-10-30T10:00', 'nilai_maksimum' => 100])->assertForbidden();
+        $this->post(route('guru.tugas.store'), [
+            'penugasan_guru_id' => $this->s->ipaA->id, 'judul' => 'X', 'tenggat' => '2026-10-30T10:00', 'nilai_maksimum' => 100,
+            'jenis_jawaban' => ['dokumen', 'foto', 'tautan', 'teks'],
+        ])->assertForbidden();
         $this->delete(route('guru.tugas.destroy', $tugas))->assertForbidden();
 
         $this->assertModelExists($tugas);
@@ -105,7 +121,7 @@ class TugasTest extends TestCase
         $tugas = $this->tugas($this->s->ipaA, ['tenggat' => now()->addHour()]);
 
         $this->actingAs($this->s->siswaA1)
-            ->post(route('siswa.pengumpulan-tugas.store', $tugas), ['berkas' => $this->jawaban()])
+            ->post(route('siswa.pengumpulan-tugas.store', $tugas), ['jenis' => 'dokumen', 'berkas' => $this->jawaban()])
             ->assertRedirect(route('siswa.tugas.show', $tugas))
             ->assertSessionHas('sukses');
 
@@ -122,11 +138,11 @@ class TugasTest extends TestCase
     {
         $tugas = $this->tugas($this->s->ipaA, ['tenggat' => now()]);
 
-        $this->actingAs($this->s->siswaA1)->post(route('siswa.pengumpulan-tugas.store', $tugas), ['berkas' => $this->jawaban()]);
+        $this->actingAs($this->s->siswaA1)->post(route('siswa.pengumpulan-tugas.store', $tugas), ['jenis' => 'dokumen', 'berkas' => $this->jawaban()]);
         $this->assertSame(StatusPengumpulan::TepatWaktu, PengumpulanTugas::where('siswa_id', $this->s->siswaA1->id)->firstOrFail()->status);
 
         Carbon::setTestNow(now()->addSecond());
-        $this->actingAs($this->s->siswaA2)->post(route('siswa.pengumpulan-tugas.store', $tugas), ['berkas' => $this->jawaban()]);
+        $this->actingAs($this->s->siswaA2)->post(route('siswa.pengumpulan-tugas.store', $tugas), ['jenis' => 'dokumen', 'berkas' => $this->jawaban()]);
         $this->assertSame(StatusPengumpulan::Terlambat, PengumpulanTugas::where('siswa_id', $this->s->siswaA2->id)->firstOrFail()->status);
     }
 
@@ -136,7 +152,7 @@ class TugasTest extends TestCase
         $tugas = $this->tugas($this->s->ipaA, ['tenggat' => now()->subDay()]);
 
         $this->actingAs($this->s->siswaA1)
-            ->post(route('siswa.pengumpulan-tugas.store', $tugas), ['berkas' => $this->jawaban()])
+            ->post(route('siswa.pengumpulan-tugas.store', $tugas), ['jenis' => 'dokumen', 'berkas' => $this->jawaban()])
             ->assertSessionHas('sukses');
 
         $this->assertSame(StatusPengumpulan::Terlambat, PengumpulanTugas::firstOrFail()->status);
@@ -148,8 +164,8 @@ class TugasTest extends TestCase
         $tugas = $this->tugas($this->s->ipaA);
         $this->actingAs($this->s->siswaA1);
 
-        $this->post(route('siswa.pengumpulan-tugas.store', $tugas), ['berkas' => $this->jawaban()]);
-        $this->post(route('siswa.pengumpulan-tugas.store', $tugas), ['berkas' => $this->jawaban('lain.pdf')])->assertSessionHas('galat');
+        $this->post(route('siswa.pengumpulan-tugas.store', $tugas), ['jenis' => 'dokumen', 'berkas' => $this->jawaban()]);
+        $this->post(route('siswa.pengumpulan-tugas.store', $tugas), ['jenis' => 'dokumen', 'berkas' => $this->jawaban('lain.pdf')])->assertSessionHas('galat');
 
         $this->assertSame(1, PengumpulanTugas::count());
     }
@@ -160,15 +176,15 @@ class TugasTest extends TestCase
         $tugas = $this->tugas($this->s->ipaA);
         $this->actingAs($this->s->siswaA1);
 
-        $this->post(route('siswa.pengumpulan-tugas.store', $tugas), [])->assertSessionHasErrors('berkas');
-        $this->post(route('siswa.pengumpulan-tugas.store', $tugas), ['berkas' => UploadedFile::fake()->create('skrip.php', 5)])->assertSessionHasErrors('berkas');
-        $this->post(route('siswa.pengumpulan-tugas.store', $tugas), ['berkas' => UploadedFile::fake()->create('skrip.exe', 5)])->assertSessionHasErrors('berkas');
-        $this->post(route('siswa.pengumpulan-tugas.store', $tugas), ['berkas' => UploadedFile::fake()->create('besar.pdf', config('lms.unggah.tugas_kb') + 1)])->assertSessionHasErrors('berkas');
+        $this->post(route('siswa.pengumpulan-tugas.store', $tugas), ['jenis' => 'dokumen'])->assertSessionHasErrors('berkas');
+        $this->post(route('siswa.pengumpulan-tugas.store', $tugas), ['jenis' => 'dokumen', 'berkas' => UploadedFile::fake()->create('skrip.php', 5)])->assertSessionHasErrors('berkas');
+        $this->post(route('siswa.pengumpulan-tugas.store', $tugas), ['jenis' => 'dokumen', 'berkas' => UploadedFile::fake()->create('skrip.exe', 5)])->assertSessionHasErrors('berkas');
+        $this->post(route('siswa.pengumpulan-tugas.store', $tugas), ['jenis' => 'dokumen', 'berkas' => UploadedFile::fake()->create('besar.pdf', config('lms.unggah.tugas_kb') + 1)])->assertSessionHasErrors('berkas');
 
         $this->assertSame(0, PengumpulanTugas::count());
 
-        foreach (['foto.jpg', 'laporan.docx', 'data.xlsx', 'slide.pptx', 'arsip.zip'] as $nama) {
-            $this->post(route('siswa.pengumpulan-tugas.store', $this->tugas($this->s->ipaA)), ['berkas' => UploadedFile::fake()->create($nama, 20)])->assertSessionHasNoErrors();
+        foreach (['foto.jpg' => 'foto', 'laporan.docx' => 'dokumen', 'data.xlsx' => 'dokumen', 'slide.pptx' => 'dokumen', 'arsip.zip' => 'dokumen'] as $nama => $jenis) {
+            $this->post(route('siswa.pengumpulan-tugas.store', $this->tugas($this->s->ipaA)), ['jenis' => $jenis, 'berkas' => UploadedFile::fake()->create($nama, 20)])->assertSessionHasNoErrors();
         }
         $this->assertSame(5, PengumpulanTugas::count());
     }
@@ -178,8 +194,8 @@ class TugasTest extends TestCase
     {
         $tugas = $this->tugas($this->s->ipaA);
 
-        $this->actingAs($this->s->siswaB1)->post(route('siswa.pengumpulan-tugas.store', $tugas), ['berkas' => $this->jawaban()])->assertForbidden();
-        $this->actingAs($this->s->guru1)->post(route('siswa.pengumpulan-tugas.store', $tugas), ['berkas' => $this->jawaban()])->assertForbidden();
+        $this->actingAs($this->s->siswaB1)->post(route('siswa.pengumpulan-tugas.store', $tugas), ['jenis' => 'dokumen', 'berkas' => $this->jawaban()])->assertForbidden();
+        $this->actingAs($this->s->guru1)->post(route('siswa.pengumpulan-tugas.store', $tugas), ['jenis' => 'dokumen', 'berkas' => $this->jawaban()])->assertForbidden();
 
         $this->assertSame(0, PengumpulanTugas::count());
     }
@@ -194,7 +210,7 @@ class TugasTest extends TestCase
         Carbon::setTestNow(now()->addHours(2));
 
         $this->actingAs($this->s->siswaA1)
-            ->put(route('siswa.pengumpulan-tugas.update', $p), ['berkas' => $this->jawaban('revisi.pdf')])
+            ->put(route('siswa.pengumpulan-tugas.update', $p), ['jenis' => 'dokumen', 'berkas' => $this->jawaban('revisi.pdf')])
             ->assertRedirect(route('siswa.tugas.show', $tugas));
 
         $p->refresh();
@@ -215,7 +231,7 @@ class TugasTest extends TestCase
 
         $this->assertModelMissing($p);
         Storage::disk('pengumpulan')->assertMissing($p->path);
-        $this->post(route('siswa.pengumpulan-tugas.store', $tugas), ['berkas' => $this->jawaban()])->assertSessionHas('sukses');
+        $this->post(route('siswa.pengumpulan-tugas.store', $tugas), ['jenis' => 'dokumen', 'berkas' => $this->jawaban()])->assertSessionHas('sukses');
     }
 
     #[Test]
@@ -226,7 +242,7 @@ class TugasTest extends TestCase
         $p->beriNilai(90);
 
         $this->actingAs($this->s->siswaA1);
-        $this->put(route('siswa.pengumpulan-tugas.update', $p), ['berkas' => $this->jawaban('curang.pdf')])->assertForbidden();
+        $this->put(route('siswa.pengumpulan-tugas.update', $p), ['jenis' => 'dokumen', 'berkas' => $this->jawaban('curang.pdf')])->assertForbidden();
         $this->delete(route('siswa.pengumpulan-tugas.destroy', $p))->assertForbidden();
 
         $this->assertSame('jawaban.pdf', $p->fresh()->nama_asli);
@@ -238,7 +254,7 @@ class TugasTest extends TestCase
         $p = $this->pengumpulan($this->tugas($this->s->ipaA), $this->s->siswaA1);
 
         $this->actingAs($this->s->siswaA2);
-        $this->put(route('siswa.pengumpulan-tugas.update', $p), ['berkas' => $this->jawaban()])->assertForbidden();
+        $this->put(route('siswa.pengumpulan-tugas.update', $p), ['jenis' => 'dokumen', 'berkas' => $this->jawaban()])->assertForbidden();
         $this->delete(route('siswa.pengumpulan-tugas.destroy', $p))->assertForbidden();
         $this->assertModelExists($p);
     }
@@ -268,9 +284,9 @@ class TugasTest extends TestCase
         $this->get(route('siswa.tugas.show', $tugas))->assertOk()->assertSee('Kumpulkan tugas');
 
         $p = $this->pengumpulan($tugas, $this->s->siswaA1);
-        $this->get(route('siswa.tugas.show', $tugas))->assertOk()->assertSee('jawaban.pdf')->assertSee('Ganti berkas');
+        $this->get(route('siswa.tugas.show', $tugas))->assertOk()->assertSee('jawaban.pdf')->assertSee('Ganti jawaban');
 
         $p->beriNilai(87.5, 'Rapi sekali');
-        $this->get(route('siswa.tugas.show', $tugas))->assertOk()->assertSee('87,5')->assertSee('Rapi sekali')->assertDontSee('Ganti berkas');
+        $this->get(route('siswa.tugas.show', $tugas))->assertOk()->assertSee('87,5')->assertSee('Rapi sekali')->assertDontSee('Ganti jawaban');
     }
 }

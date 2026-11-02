@@ -28,6 +28,7 @@
         @else
             <p class="text-sm text-muted">Belum ada instruksi. <a href="{{ route('guru.tugas.edit', $tugas) }}" class="tautan">Tambahkan</a>.</p>
         @endif
+        <x-daftar-lampiran :tugas="$tugas" class="mt-6" />
     </x-card>
 
     <x-card judul="Detail">
@@ -38,6 +39,14 @@
                 <dd class="text-xs {{ $tugas->tenggat->isPast() ? 'text-danger' : 'text-success' }}">{{ $tugas->tenggat->isPast() ? 'Sudah lewat ' : 'Sisa ' }}{{ $tugas->tenggat->diffForHumans(null, true) }}</dd>
             </div>
             <div><dt class="text-xs text-muted">Nilai maksimum</dt><dd class="font-semibold text-ink">{{ $tugas->nilai_maksimum }}</dd></div>
+            <div>
+                <dt class="text-xs text-muted">Jenis jawaban yang diterima</dt>
+                <dd class="mt-1 flex flex-wrap gap-1.5">
+                    @foreach ($tugas->jenis_jawaban as $jenis)
+                        <span class="badge-info">{{ \App\Enums\JenisJawaban::from($jenis)->label() }}</span>
+                    @endforeach
+                </dd>
+            </div>
             <div><dt class="text-xs text-muted">Dibuat</dt><dd class="font-semibold text-ink">{{ $tugas->created_at->translatedFormat('d M Y, H:i') }}</dd></div>
         </dl>
     </x-card>

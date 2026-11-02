@@ -5,7 +5,7 @@
 @section('konten')
 <x-judul-halaman judul="Ubah tugas" :deskripsi="$tugas->judul" :kembali="route('guru.tugas.show', $tugas)" label="Detail tugas" />
 
-<form method="POST" action="{{ route('guru.tugas.update', $tugas) }}" class="card max-w-3xl p-5 sm:p-7">
+<form method="POST" action="{{ route('guru.tugas.update', $tugas) }}" enctype="multipart/form-data" class="card max-w-3xl p-5 sm:p-7">
     @csrf @method('PUT')
     @include('guru.tugas._form')
 

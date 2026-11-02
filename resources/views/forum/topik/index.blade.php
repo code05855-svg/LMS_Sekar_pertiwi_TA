@@ -27,7 +27,7 @@
                 @foreach ($daftar as $t)
                     <li>
                         <a href="{{ route('forum.topik.show', $t) }}" class="flex items-start gap-4 px-5 py-4 transition hover:bg-canvas sm:px-6">
-                            <x-avatar :nama="$t->pembuat->nama" ukuran="size-11 text-sm" />
+                            <x-avatar :user="$t->pembuat" ukuran="size-11 text-sm" />
                             <div class="min-w-0 flex-1">
                                 <div class="flex flex-wrap items-center gap-2">
                                     <h3 class="font-semibold text-ink">{{ $t->judul }}</h3>

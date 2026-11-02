@@ -27,7 +27,7 @@
         </div>
 
         <a href="{{ route('profil.edit') }}" class="flex items-center gap-3 rounded-xl py-1 pl-1 pr-2 transition hover:bg-canvas" title="Profil saya">
-            <x-avatar :nama="$pengguna->nama" ukuran="size-10 text-sm" />
+            <x-avatar :user="$pengguna" ukuran="size-10 text-sm" />
             <span class="hidden text-left leading-tight sm:block">
                 <span class="block max-w-44 truncate text-sm font-semibold text-ink">{{ $pengguna->nama }}</span>
                 <span class="block text-xs text-muted">{{ $pengguna->peran->label() }}@if ($pengguna->adalahSiswa() && $pengguna->kelas_id) · {{ $pengguna->kelas->nama }}@endif</span>

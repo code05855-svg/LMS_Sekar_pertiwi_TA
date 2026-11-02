@@ -55,7 +55,7 @@
     <div class="space-y-5">
         <x-card judul="Guru pengampu">
             <div class="flex items-center gap-3">
-                <x-avatar :nama="$penugasan->guru->nama" />
+                <x-avatar :user="$penugasan->guru" />
                 <div class="min-w-0">
                     <p class="truncate font-semibold text-ink">{{ $penugasan->guru->nama }}</p>
                     <p class="text-xs text-muted">{{ $penugasan->mataPelajaran->nama }} · Kelas {{ $penugasan->kelas->nama }}</p>

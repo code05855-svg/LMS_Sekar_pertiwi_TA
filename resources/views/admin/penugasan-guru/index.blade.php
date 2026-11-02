@@ -36,7 +36,7 @@
                     <td>{{ $p->mataPelajaran->nama }}</td>
                     <td>
                         <div class="flex items-center gap-2">
-                            <x-avatar :nama="$p->guru->nama" ukuran="size-8 text-[11px]" />
+                            <x-avatar :user="$p->guru" ukuran="size-8 text-[11px]" />
                             <span>{{ $p->guru->nama }}</span>
                         </div>
                     </td>

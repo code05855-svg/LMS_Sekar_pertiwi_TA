@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Enums;
 
@@ -16,20 +16,29 @@ enum JenisJawaban: string
             self::Foto => 'Foto',
             self::Tautan => 'Tautan (link)',
             self::Teks => 'Teks',
-            };
+        };
     }
-            
-            // nama ikon pada komponen x-ikon
-    public function ikon(): string 
+
+    // nama ikon pada komponen x-ikon
+    public function ikon(): string
     {
-               
+
         return match ($this) {
             self::Dokumen => 'dokumen',
             self::Foto => 'foto',
             self::Tautan => 'tautan',
             self::Teks => 'teks',
-            };
+        };
     }
+
+    public function berkas(): bool
+    {
+        return match ($this) {
+            self::Dokumen, self::Foto => true,
+            self::Tautan, self::Teks => false,
+        };
+    }
+
     public static function nilaiSemua(): array
     {
         return array_column(self::cases(), 'value');

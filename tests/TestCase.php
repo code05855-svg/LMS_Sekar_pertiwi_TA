@@ -8,8 +8,8 @@ use App\Models\BerkasMateri;
 use App\Models\Kelas;
 use App\Models\MataPelajaran;
 use App\Models\Materi;
-use App\Models\PenugasanGuru;
 use App\Models\PengumpulanTugas;
+use App\Models\PenugasanGuru;
 use App\Models\Tugas;
 use App\Models\User;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
@@ -53,7 +53,7 @@ abstract class TestCase extends BaseTestCase
 
         Schema::disableForeignKeyConstraints();
 
-        foreach (Schema::getTableListing(schemaQualified: false) as $tabel) {
+        foreach (Schema::getTableListing(DB::connection()->getDatabaseName(), schemaQualified: false) as $tabel) {
             if ($tabel !== 'migrations') {
                 DB::table($tabel)->truncate();
             }
@@ -164,7 +164,7 @@ abstract class TestCase extends BaseTestCase
     /** Ganti semua tiruan HTTP sebelumnya (Http::fake biasa memakai tiruan PERTAMA yang cocok). */
     protected function tiruHttp(array $tiruan): void
     {
-        Http::swap(new HttpFactory());
+        Http::swap(new HttpFactory);
         Http::fake($tiruan);
     }
 
@@ -190,7 +190,7 @@ abstract class TestCase extends BaseTestCase
      */
     protected function sekolah(): object
     {
-        $s = new \stdClass();
+        $s = new \stdClass;
         $s->admin = $this->admin(['nomor_induk' => 'admin']);
         $s->kelasA = $this->kelas('VII A');
         $s->kelasB = $this->kelas('VII B');

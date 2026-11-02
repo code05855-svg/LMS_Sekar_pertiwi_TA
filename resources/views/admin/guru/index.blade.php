@@ -42,7 +42,7 @@
                 <tr>
                     <td>
                         <div class="flex items-center gap-3">
-                            <x-avatar :nama="$akun->nama" ukuran="size-9 text-xs" />
+                            <x-avatar :user="$akun" ukuran="size-9 text-xs" />
                             <span class="font-semibold text-ink">{{ $akun->nama }}</span>
                         </div>
                     </td>

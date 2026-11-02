@@ -4,7 +4,7 @@
 
 @section('konten')
 <x-judul-halaman judul="Riwayat pertanyaan" deskripsi="Semua pertanyaan yang pernah kamu ajukan ke Sekar AI, terbaru di atas." :kembali="route('chatbot.index')" label="Kembali ke chat" />
-
+<x-alert tipe="info" class="mb-4">Riwayat percakapan disimpan selama {{ (int) config('lms.chatbot.retensi_hari') }} hari setelah percakapan terakhir, lalu dihapus otomatis.</x-alert>
 @if ($daftar->isEmpty())
     <x-card>
         <x-kosong judul="Belum ada pertanyaan" deskripsi="Pertanyaan dan jawaban Sekar AI akan tersimpan di sini." ikon="riwayat">

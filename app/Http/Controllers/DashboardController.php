@@ -7,14 +7,15 @@ use App\Enums\StatusIndeks;
 use App\Models\BerkasMateri;
 use App\Models\ForumTopik;
 use App\Models\Kelas;
-use App\Models\Materi;
 use App\Models\MataPelajaran;
+use App\Models\Materi;
 use App\Models\PengumpulanTugas;
 use App\Models\PenugasanGuru;
 use App\Models\RiwayatChat;
 use App\Models\Tugas;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 /** Beranda sesuai peran (bento: kartu ringkasan dan daftar). */
@@ -55,8 +56,9 @@ class DashboardController extends Controller
                 'terindeks' => (int) ($indeks[StatusIndeks::Terindeks->value] ?? 0),
                 'proses' => (int) (($indeks[StatusIndeks::Menunggu->value] ?? 0) + ($indeks[StatusIndeks::Diproses->value] ?? 0)),
                 'gagal' => (int) ($indeks[StatusIndeks::Gagal->value] ?? 0),
-                'pertanyaan' => RiwayatChat::count(),
-                'pertanyaan_gagal' => RiwayatChat::where('status', StatusChat::Gagal)->count(),
+                'pertanyaan' => RiwayatChat::count() + (int) DB::table('statistik_chat_harian')->sum('jumlah'),
+                'pertanyaan_gagal' => RiwayatChat::where('status', StatusChat::Gagal)->count() + (int) DB::table('statistik_chat_harian')->sum('gagal'),
+
             ],
         ];
     }

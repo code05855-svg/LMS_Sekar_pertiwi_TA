@@ -98,6 +98,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(RiwayatChat::class, 'user_id');
     }
+    // ------------------------------------------------------------------
+    // Foto profil
+    // ------------------------------------------------------------------
+    public function fotoProfilUrl(): ?string
+    {
+        return $this->foto_profil
+            ? route('foto-profil.show', ['user' => $this->id, 'v' => substr(md5($this->foto_profil), 0,8)]) : null;
+    }
 
     // ------------------------------------------------------------------
     // Scope
