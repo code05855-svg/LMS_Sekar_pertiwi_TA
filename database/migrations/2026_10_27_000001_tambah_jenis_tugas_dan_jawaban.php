@@ -5,16 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
  
-/**
- * Jenis tugas dan jenis jawaban.
- *
- * - tugas.jenis_jawaban      : jenis jawaban yang diterima (dokumen,foto,tautan,teks).
- * - lampiran_tugas           : lampiran dari guru (dokumen, foto, atau tautan) pada sebuah tugas.
- * - pengumpulan_tugas.jenis  : jenis jawaban siswa. Kolom berkas boleh NULL karena
- *                              jawaban berupa tautan atau teks tidak punya berkas.
- *
- * Aman dijalankan walau SQL manual (perbaikan.sql) sudah dijalankan lebih dulu.
- */
 return new class extends Migration
 {
     public function up(): void
