@@ -88,7 +88,7 @@ class TugasTest extends TestCase
         $this->actingAs($this->s->guru1)->delete(route('guru.tugas.destroy', $tugas))->assertRedirect();
 
         $this->assertModelMissing($p);
-        Storage::disk('pengumpulan')->assertMissing($p->path);
+        $this->assertFalse(Storage::disk('pengumpulan')->exists($p->path));
     }
 
     #[Test]
@@ -130,7 +130,7 @@ class TugasTest extends TestCase
         $this->assertSame($this->s->siswaA1->id, $p->siswa_id);
         $this->assertSame('jawaban.pdf', $p->nama_asli);
         $this->assertNull($p->nilai);
-        Storage::disk('pengumpulan')->assertExists($p->path);
+        $this->assertTrue(Storage::disk('pengumpulan')->exists($p->path));
     }
 
     #[Test]
@@ -217,8 +217,8 @@ class TugasTest extends TestCase
         $this->assertSame('revisi.pdf', $p->nama_asli);
         $this->assertSame(StatusPengumpulan::Terlambat, $p->status);
         $this->assertTrue($p->waktu_kumpul->equalTo(now()));
-        Storage::disk('pengumpulan')->assertMissing($lama);
-        Storage::disk('pengumpulan')->assertExists($p->path);
+        $this->assertFalse(Storage::disk('pengumpulan')->exists($lama));
+        $this->assertTrue(Storage::disk('pengumpulan')->exists($p->path));
     }
 
     #[Test]
@@ -230,7 +230,7 @@ class TugasTest extends TestCase
         $this->actingAs($this->s->siswaA1)->delete(route('siswa.pengumpulan-tugas.destroy', $p))->assertRedirect();
 
         $this->assertModelMissing($p);
-        Storage::disk('pengumpulan')->assertMissing($p->path);
+        $this->assertFalse(Storage::disk('pengumpulan')->exists($p->path));
         $this->post(route('siswa.pengumpulan-tugas.store', $tugas), ['jenis' => 'dokumen', 'berkas' => $this->jawaban()])->assertSessionHas('sukses');
     }
 
