@@ -29,6 +29,17 @@
             ['Sekar AI', 'chatbot.index', 'robot', ['chatbot.*']],
         ],
     };
+    $kelompok = ['Menu utama' => $menu];
+
+    if ($pengguna->peran === PeranPengguna::Admin) {
+        $kelompok['Beranda sekolah'] = [
+            ['Informasi', 'admin.informasi.index', 'berita', ['admin.informasi.*']],
+            ['Kegiatan', 'admin.kegiatan.index', 'kalender', ['admin.kegiatan.*']],
+            ['Profil Beranda', 'admin.beranda.edit', 'pengaturan', ['admin.beranda.*']],
+        ];
+    }
+
+
 @endphp
 
 <div x-show="menu" x-cloak x-transition.opacity class="fixed inset-0 z-30 bg-navy-900/50 lg:hidden" @click="menu = false"></div>
@@ -46,22 +57,29 @@
     <div class="mx-5 border-t border-white/10"></div>
 
     <nav class="scroll-tipis flex-1 overflow-y-auto px-3 py-5">
-        <p class="px-3 pb-2 text-[11px] font-semibold uppercase tracking-wider text-white/50">Menu utama</p>
-        <ul class="space-y-1">
-            @foreach ($menu as [$label, $rute, $ikon, $pola])
-                @php($aktif = request()->routeIs(...$pola))
-                <li>
-                    <a href="{{ route($rute) }}" @if ($aktif) aria-current="page" @endif
-                       class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition {{ $aktif ? 'bg-gold text-navy' : 'text-white/85 hover:bg-white/10 hover:text-white' }}">
-                        <x-ikon :nama="$ikon" class="size-[18px]" />
-                        {{ $label }}
-                    </a>
-                </li>
-            @endforeach
-        </ul>
+        @foreach ($kelompok as $judulKelompok => $itemKelompok)
+            <p class="px-3 pb-2 {{ $loop->first ? '' : 'pt-6' }} text-[11px] font-semibold uppercase tracking-wider text-white/50">{{ $judulKelompok }}</p>
+            <ul class="space-y-1">
+                @foreach ($itemKelompok as [$label, $rute, $ikon, $pola])
+                    @php($aktif = request()->routeIs(...$pola))
+                    <li>
+                        <a href="{{ route($rute) }}" @if ($aktif) aria-current="page" @endif
+                           class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition {{ $aktif ? 'bg-gold text-navy' : 'text-white/85 hover:bg-white/10 hover:text-white' }}">
+                            <x-ikon :nama="$ikon" class="size-[18px]" />
+                            {{ $label }}
+                        </a>
+                    </li>
+                @endforeach
+            </ul>
+        @endforeach
     </nav>
 
     <div class="space-y-1 border-t border-white/10 px-3 py-4">
+        <a href="{{ route('beranda') }}" target="_blank" rel="noopener" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-white/85 transition hover:bg-white/10 hover:text-white">
+            <x-ikon nama="sekolah" class="size-[18px]" /> Beranda sekolah
+            <x-ikon nama="luar" class="ml-auto size-3.5 text-white/50" />
+        </a>
+
         @php($aktifProfil = request()->routeIs('profil.*'))
         <a href="{{ route('profil.edit') }}" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition {{ $aktifProfil ? 'bg-gold text-navy' : 'text-white/85 hover:bg-white/10 hover:text-white' }}">
             <x-ikon nama="kata-sandi" class="size-[18px]" /> Profil & password
