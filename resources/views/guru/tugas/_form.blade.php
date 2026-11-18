@@ -6,6 +6,7 @@
     $maksLampiran = (int) config('lms.unggah.lampiran_maks');
     $maksMb = (int) round(config('lms.unggah.tugas_kb') / 1024);
     $lampiranAda = $baru ? collect() : $tugas->lampiran;
+    $aturanDipilih = old('aturan_tenggat', $tugas->aturan_tenggat->value);
 @endphp
  
 <div class="space-y-5">
@@ -29,9 +30,27 @@
  
     <div class="grid gap-5 sm:grid-cols-2">
         <x-field type="datetime-local" name="tenggat" label="Tenggat pengumpulan" :value="old('tenggat', $tugas->tenggat?->format('Y-m-d\TH:i'))" required
-                 hint="Pengumpulan setelah waktu ini otomatis tercatat terlambat." />
+                 hint="Batas waktu pengumpulan. Apa yang terjadi setelahnya kamu atur di bawah." />
         <x-field type="number" name="nilai_maksimum" label="Nilai maksimum" :value="old('nilai_maksimum', $tugas->nilai_maksimum)" required min="1" max="1000" hint="Biasanya 100." />
     </div>
+    
+    <fieldset>
+        <legend class="label">Setelah tenggat lewat</legend>
+        <div class="grid gap-3 sm:grid-cols-2">
+            @foreach (\App\Enums\AturanTenggat::cases() as $aturan)
+                <label class="flex cursor-pointer items-start gap-3 rounded-xl border border-line bg-white p-3.5 transition has-[:checked]:border-navy has-[:checked]:bg-info-soft has-[:checked]:ring-1 has-[:checked]:ring-navy">
+                    <input type="radio" name="aturan_tenggat" value="{{ $aturan->value }}" class="mt-1 size-4 accent-navy" @checked($aturanDipilih === $aturan->value)>
+                    <span class="min-w-0">
+                        <span class="flex items-center gap-2 text-sm font-semibold text-ink"><x-ikon :nama="$aturan->ikon()" class="size-4 text-navy" /> {{ $aturan->label() }}</span>
+                        <span class="mt-1 block text-xs leading-relaxed text-muted">{{ $aturan->keterangan() }}</span>
+                    </span>
+                </label>
+            @endforeach
+        </div>
+        <p class="hint">Aturan ini bisa diubah kapan saja, termasuk setelah tenggat (mis. membuka kembali pengumpulan dengan memilih "Terima, tandai terlambat" atau menggeser tenggat).</p>
+        @error('aturan_tenggat')<p class="error-text">{{ $message }}</p>@enderror
+    </fieldset>
+
     <fieldset>
         <legend class="label">Jenis jawaban yang diterima</legend>
         <div class="grid gap-3 sm:grid-cols-2">

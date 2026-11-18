@@ -4,6 +4,8 @@
 @elseif ($pengumpulan)
     <span class="badge-info">Dikumpulkan</span>
     @if ($pengumpulan->status === \App\Enums\StatusPengumpulan::Terlambat)<span class="badge-danger">Terlambat</span>@endif
+@elseif($tugas->pengumpulanDitutup())
+    <span class="badge-danger">Ditutup</span>
 @elseif ($tugas->tenggat->isPast())
     <span class="badge-danger">Lewat tenggat</span>
 @else

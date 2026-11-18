@@ -38,7 +38,7 @@
                     </td>
                     <td class="whitespace-nowrap">
                         <span class="{{ $t->tenggat->isPast() ? 'text-muted' : 'font-medium text-ink' }}">{{ $t->tenggat->translatedFormat('d M Y, H:i') }}</span>
-                        @if ($t->tenggat->isPast())<span class="block text-xs text-muted">Sudah lewat</span>@endif
+                        @if ($t->pengumpulanDitutup())<span class="block text-xs font-semibold text-danger">Pengumpulan ditutup</span>@elseif ($t->tenggat->isPast())<span class="block text-xs text-muted">Sudah lewat</span>@endif
                     </td>
                     <td class="whitespace-nowrap">
                         <span class="font-semibold text-ink">{{ $t->pengumpulan_tugas_count }}</span>

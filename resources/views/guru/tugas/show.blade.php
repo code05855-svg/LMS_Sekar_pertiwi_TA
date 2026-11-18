@@ -38,6 +38,15 @@
                 <dd class="font-semibold text-ink">{{ $tugas->tenggat->translatedFormat('l, d F Y · H:i') }}</dd>
                 <dd class="text-xs {{ $tugas->tenggat->isPast() ? 'text-danger' : 'text-success' }}">{{ $tugas->tenggat->isPast() ? 'Sudah lewat ' : 'Sisa ' }}{{ $tugas->tenggat->diffForHumans(null, true) }}</dd>
             </div>
+            <div>
+                <dt class="text-xs text-muted">Setelah tenggat</dt>
+                <dd class="mt-1 flex flex-wrap items-center gap-1.5">
+                    <span class="{{ $tugas->aturan_tenggat === \App\Enums\AturanTenggat::Tutup ? 'badge-danger' : 'badge-gold' }}"><x-ikon :nama="$tugas->aturan_tenggat->ikon()" class="size-3.5" /> {{ $tugas->aturan_tenggat->label() }}</span>
+                    @if ($tugas->pengumpulanDitutup())<span class="badge-muted">Sudah ditutup</span>@endif
+                </dd>
+                <dd class="mt-1 text-xs leading-relaxed text-muted">{{ $tugas->aturan_tenggat->keterangan() }}</dd>
+            </div>
+
             <div><dt class="text-xs text-muted">Nilai maksimum</dt><dd class="font-semibold text-ink">{{ $tugas->nilai_maksimum }}</dd></div>
             <div>
                 <dt class="text-xs text-muted">Jenis jawaban yang diterima</dt>
